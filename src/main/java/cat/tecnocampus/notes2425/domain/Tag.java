@@ -1,4 +1,10 @@
 package cat.tecnocampus.notes2425.domain;
 
-public record Tag(String name) {
+import jakarta.persistence.*;
+
+@Entity
+@Table (name="tag")
+public record Tag(@Id String name) {
+
+
 }
