@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,7 +32,6 @@ public class NoteRepository {
         """;
         return jdbcClient.sql(query).param("ownerId",ownerId).query(NoteDTO.class).list();
     }
-
 
     public Set<String> getNoteTags(long noteId) {
         String query = "select nt.tag_name from note_tag nt where nt.note_id = ?";
@@ -92,5 +92,20 @@ public class NoteRepository {
         """;
         jdbcClient.sql(query).param(note.title()).param(note.content()).param(noteId).update();
         saveTagsIfExist(noteId, note.tags().stream().map(Tag::new).collect(Collectors.toSet()));
+    }
+
+    public void saveTag(Tag tag) {
+        String query = "insert into tag (name) values (?)";
+        jdbcClient.sql(query).param(tag.name()).update();
+    }
+
+    public Note findById(long noteId) {
+        String query = "select id, owner_id, title, content, creation_date from note where id = ?";
+        return jdbcClient.sql(query).param(noteId).query(Note.class).single();
+    }
+
+    public void addUserToNote(Long userId, Long noteId) {
+        String query = "insert into user_note (user_id, note_id) values (?, ?)";
+        jdbcClient.sql(query).param(userId).param(noteId).update();
     }
 }

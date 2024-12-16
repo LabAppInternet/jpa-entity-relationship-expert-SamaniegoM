@@ -5,6 +5,8 @@ import cat.tecnocampus.notes2425.domain.UserLab;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -23,5 +25,11 @@ public class UserRepository {
     public Optional<UserLab> findById(long id) {
         String query = "select * from user_lab where id = ?";
         return jdbcClient.sql(query).param(id).query(UserLab.class).optional();
+    }
+
+
+    public List<UserDTO> findAll() {
+        String query = "select * from user_lab";
+        return jdbcClient.sql(query).query(UserDTO.class).list();
     }
 }

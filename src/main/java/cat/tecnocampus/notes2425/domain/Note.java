@@ -16,7 +16,4 @@ public record Note(@Id @GeneratedValue(strategy =GenerationType.IDENTITY) Long i
                    @CreatedDate @NotNull LocalDateTime creationDate,
                    @ManyToMany @JoinTable(name = "Note_Tag", joinColumns = @JoinColumn(name = "note_Id"), inverseJoinColumns = @JoinColumn(name = "tag_name")) Set<Tag> tags) {
 
-
-
-
 }

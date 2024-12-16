@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,21 +52,33 @@ public class UserNotesService {
         noteRepository.update(note, noteId);
     }
 
-    public void createTag() {
+    public void createTag(String tagName) {
         //TODO 2.1 implement the method
+        Tag tag = new Tag(tagName);
+        noteRepository.saveTag(tag);
     }
 
-    public void addTagToNote() {
+    public void addTagToNote(long noteId, Tag newtag) {
         //TODO 2.1 implement the method
+        Set<Tag> tagSet = Set.of(newtag);
+        noteRepository.saveTagsIfExist(noteId, tagSet);
     }
 
-    public void addNoteToUser() {
+    public void addNoteToUser(long userId, long noteId) {
         //TODO 2.1 implement the method
+        noteRepository.addUserToNote(userId, noteId);
     }
 
-    public void findUsersRatedByNotes() {
+
+    public List<UserDTO> findUsersRatedByNotes() {
         //TODO 2.1 implement the method
+
+        List<UserDTO> users = userRepository.findAll();
+        return users.stream()
+                .sorted((u1, u2) -> Integer.compare(noteRepository.findUserNotes(u2.id()).size(), noteRepository.findUserNotes(u1.id()).size()))
+                .collect(Collectors.toList());
     }
+
 
     public List<NoteDTO> findUserNotes(long ownerId) {
         return noteRepository.findUserNotes(ownerId).stream()
